@@ -17,3 +17,4 @@ complete -c nft -a flush -d "Flush (delete everything from) a ruleset, table, ch
 complete -c nft -a export -d "Print the ruleset in a machine readable format (json or xml)"
 complete -c nft -a delete -d "Delete a table, chain, rule, set, element, map, or object."
 complete -c nft -a create -d "Similar to add but returns an error for existing chain."
+complete -c nft -a rename -d "Rename the specified chain"
