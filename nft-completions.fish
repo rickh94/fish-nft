@@ -14,3 +14,6 @@ complete -c nft -s i -l interactive -d "Read input from an interactive readline 
 complete -c nft -a add -d "Add a table, chain, rule, set, map, or object"
 complete -c nft -a list -d "List a ruleset, table, chain, set, map, or object"
 complete -c nft -a flush -d "Flush (delete everything from) a ruleset, table, chain, set, or map"
+complete -c nft -a export -d "Print the ruleset in a machine readable format (json or xml)"
+complete -c nft -a delete -d "Delete a table, chain, rule, set, element, map, or object."
+complete -c nft -a create -d "Similar to add but returns an error for existing chain."
