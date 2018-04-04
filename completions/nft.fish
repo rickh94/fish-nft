@@ -22,8 +22,8 @@ function __fish_nft_needs_command
 end
 
 complete -c nft -f
-complete -c nft -s h -l help -d "Show help message and all options"
-complete -c nft -s v -l version -d "Show version"
+complete -c nft -s h -l help -x -d "Show help message and all options"
+complete -c nft -s v -l version -x -d "Show version"
 complete -c nft -s n -l numeric -d "Show data numerically"
 complete -c nft -s N -l reversedns -d "Translate IP addresses to names. Usually requires network traffic for DNS lookup."
 complete -c nft -s s -l stateless -d "Omit stateful information of rules and stateful objects."
@@ -32,7 +32,7 @@ complete -c nft -s a -l handle -d "Show rule hanldes in output"
 complete -c nft -s e -l echo -d "When inserting items into the ruleset, print notifications."
 complete -c nft -s I -l includepath -r -d "Add directory to the list of directories to be searched for included files."
 complete -c nft -s f -l file -r -d "Read input from a file"
-complete -c nft -s i -l interactive -d "Read input from an interactive readline CLI"
+complete -c nft -s i -l interactive -x -d "Read input from an interactive readline CLI"
 complete -c nft -n "__fish_nft_needs_command" -a add -d "Add a table, chain, rule, set, map, or object"
 complete -c nft -n "__fish_nft_needs_command" -a list -d "List a ruleset, table, chain, set, map, or object"
 complete -c nft -n "__fish_nft_needs_command" -a flush -d "Flush (delete everything from) a ruleset, table, chain, set, or map"
