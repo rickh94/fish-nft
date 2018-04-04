@@ -2,8 +2,8 @@
 # Based heavily on the built in git completion in fish shell
 #
 
-set -gu choices "chain" "table" "rule" "set" "element" "map"
-set -gu families "ip" "ip6" "inet" "arp" "bridge" "netdev"
+set -gu __nft_choices "chain" "table" "rule" "set" "element" "map"
+set -gu __nft_families "ip" "ip6" "inet" "arp" "bridge" "netdev"
 
 # check if nft is waiting for a command
 function __nft_needs_command
@@ -49,7 +49,7 @@ end
 # check whether a family is needed
 function __nft_needs_family
   set -l cmd (commandline -opc)
-  for choice in $choices
+  for choice in $__nft_choices
     if [ $cmd[-1] = $choice ]
       return 0
     end
@@ -60,7 +60,7 @@ end
 # check whether a table is needed
 function __nft_needs_table
   set -l cmd (commandline -opc)
-  for word in $choices $families
+  for word in $__nft_choices $__nft_families
     if [ $cmd[-1] = $word ]
       return 0
     end
@@ -105,4 +105,4 @@ complete -c nft -n "__nft_needs_choice create rename" -a "chain"
 complete -c nft -n "__nft_needs_choice insert replace" -a "rule"
 
 # after command groups
-complete -c nft -n "__nft_needs_family" -a "$families" -d "family (optional)"
+complete -c nft -n "__nft_needs_family" -a "$__nft_families" -d "family (optional)"
