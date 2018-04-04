@@ -32,9 +32,19 @@ function __nft_using_command
   and return 0
 end
 
+# check whether chain/table/rule/etc is needed
+function __nft_needs_choice
+  set -l cmd (commandline -opc)
+  if __nft_needs_family
+    return 1
+  end
+  return (__nft_using_command $argv)
+end
+
+
 # check whether a family is needed
 function __nft_needs_family
-  set -l cmd (comandline -opv)
+  set -l cmd (commandline -opc)
   for choice in "chain" "table" "rule" "set" "element" "map"
     if [ "$cmd[-1]" = "$choice" ]
       return 0
@@ -66,7 +76,7 @@ complete -c nft -n "__nft_needs_command" -a insert -d "Similar to the add comman
 complete -c nft -n "__nft_needs_command" -a replace -d "Similar to the add command, but replaces the specified rule."
 complete -c nft -n "__nft_needs_command" -a reset -d "List-and-reset stateful object."
 complete -c nft -n "__nft_needs_command" -a chain -d "Edit an existing chain."
-complete -c nft -n "__nft_using_command add delete" -a "table chain set rule map element"
+complete -c nft -n "__nft_needs_choice add delete" -a "table chain set rule map element"
 complete -c nft -n "__nft_using_command list" -a "ruleset tables chains sets maps table chain set map"
 complete -c nft -n "__nft_using_command flush" -a "ruleset table chain set map"
 complete -c nft -n "__nft_using_command export" -a "ruleset"
