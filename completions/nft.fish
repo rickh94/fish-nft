@@ -32,6 +32,18 @@ function __nft_using_command
   and return 0
 end
 
+function __nft_needs_table
+  set -l cmd (__nft_needs_command)
+  switch $cmd[-1]
+    case "table" "chain" "rule" "set"
+      return 0
+    case "*"
+      return 1
+end
+
+function __nft_avail_tables
+	sudo nft list tables | awk '{$1=""; print $0}'
+end
 
 complete -c nft -f
 complete -c nft -s h -l help -x -d "Show help message and all options"
@@ -62,3 +74,4 @@ complete -c nft -n "__nft_using_command flush" -a "ruleset table chain set map"
 complete -c nft -n "__nft_using_command export" -a "ruleset"
 complete -c nft -n "__nft_using_command create rename" -a "chain"
 complert -c nft -n "__nft_using_command insert replace" -a "rule"
+complete -c nft -n "__nft_needs_table" -a "(__nft_avail_tables)"
