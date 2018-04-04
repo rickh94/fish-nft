@@ -32,6 +32,14 @@ function __nft_using_command
   and return 0
 end
 
+# check whether a family is needed
+function __nft_needs_family
+  set -l cmd (comandline -opv)
+  for choice in "chain" "table" "rule" "set" "element" "map"
+    contains -- $choice $cmd; and return 0
+  end
+  return 1
+end
 
 complete -c nft -f
 complete -c nft -s h -l help -x -d "Show help message and all options"
@@ -62,3 +70,4 @@ complete -c nft -n "__nft_using_command flush" -a "ruleset table chain set map"
 complete -c nft -n "__nft_using_command export" -a "ruleset"
 complete -c nft -n "__nft_using_command create rename" -a "chain"
 complete -c nft -n "__nft_using_command insert replace" -a "rule"
+complete -c nft -n "__nft_needs_family" -a "ip ip6 inet arp bridge netdev"
