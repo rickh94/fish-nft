@@ -2,8 +2,8 @@
 # Based heavily on the built in git completion in fish shell
 #
 
-set -l choices "chain" "table" "rule" "set" "element" "map"
-set -l families "ip" "ip6" "inet" "arp" "bridge" "netdev"
+set -gu choices "chain" "table" "rule" "set" "element" "map"
+set -gu families "ip" "ip6" "inet" "arp" "bridge" "netdev"
 
 # check if nft is waiting for a command
 function __nft_needs_command
