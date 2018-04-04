@@ -9,6 +9,7 @@ set -gu __nft_families "ip" "ip6" "inet" "arp" "bridge" "netdev"
 function __nft_needs_command
     set cmd (commandline -opc)
     set -l skip_next 1
+    set -l dropwords 1
     set -q cmd[2]
     or return 0
     for c in $cmd[2..-1]
@@ -36,10 +37,22 @@ function __nft_using_command
   and return 0
 end
 
+
+# check whether nft is has a chain/table/rule choice
+function __nft_has_choice
+  set -l cmd (commandline -opc)
+  for word in $__nft_choices
+    if contains -- $word $cmd
+      return 0
+    end
+  end
+  return 1
+end
+
 # check whether chain/table/rule/etc is needed
 function __nft_needs_choice
   set -l cmd (commandline -opc)
-  if __nft_needs_family
+  if __nft_has_choice
     return 1
   end
   return (__nft_using_command $argv)
@@ -67,6 +80,28 @@ function __nft_needs_table
   end
   return 1
 end
+
+# check whether nft needs chain
+function __nft_needs_chain
+  set -l cmd (commandline -opc)
+  if not contains -- chain $cmd; and not contains -- rule $cmd
+    return 1
+  end
+  set -l min_len 4
+  if contains -- sudo $cmd
+    set min_len (math $min_len+1)
+  end
+  for word in $__nft_families
+    if contains -- $word $cmd
+      set min_len (math $min_len+1)
+    end
+  end
+  if test (count $cmd) -eq $min_len
+    return 0
+  end
+  return 1
+end
+
 # nft must take a subcommand or a switch, file completions are useless here
 complete -c nft -f
 
@@ -106,3 +141,5 @@ complete -c nft -n "__nft_needs_choice insert replace" -a "rule"
 
 # after command groups
 complete -c nft -n "__nft_needs_family" -a "$__nft_families" -d "family (optional)"
+complete -c nft -n "__nft_needs_table" -a "filter nat raw mangle security" -d "common table name"
+complete -c nft -n "__nft_needs_chain" -a "input output prerouting postrouting tcp udp forward" -d "common chain name"
