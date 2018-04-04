@@ -36,7 +36,9 @@ end
 function __nft_needs_family
   set -l cmd (comandline -opv)
   for choice in "chain" "table" "rule" "set" "element" "map"
-    contains -- $choice $cmd; and return 0
+    if test $cmd[-1] == $choice
+      return 0
+    end
   end
   return 1
 end
