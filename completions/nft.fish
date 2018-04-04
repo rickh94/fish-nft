@@ -1,6 +1,6 @@
 # Completions for nft command line interface to nftables
 
-function __fish_nft_needs_command
+function __nft_needs_command
     set cmd (commandline -opc)
     set -l skip_next 1
     set -q cmd[2]
