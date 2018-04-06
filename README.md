@@ -13,7 +13,7 @@
 ## Install
 
 ```fish
-$ omf install https://github.com/rickh94/nft
+$ omf install https://github.com/rickh94/fish-nft
 ```
 
 
