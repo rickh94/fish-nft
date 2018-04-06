@@ -9,9 +9,8 @@ set -gu __nft_rule_matches "ip" "ip6" "tcp" "udp" "udplite" "sctp" "dccp" "ah" "
 
 # check if nft is waiting for a command
 function __nft_needs_command
-    set cmd (commandline -opc)
+    set -l cmd (commandline -opc)
     set -l skip_next 1
-    set -l dropwords 1
     set -q cmd[2]
     or return 0
     for c in $cmd[2..-1]
@@ -64,11 +63,8 @@ end
 # check whether a family is needed
 function __nft_needs_family
   set -l cmd (commandline -opc)
-  for choice in $__nft_choices
-    if [ $cmd[-1] = $choice ]
-      return 0
-    end
-  end
+  contains -- $cmd[-1] $__nft_choices
+  and return 0
   return 1
 end
 
@@ -86,11 +82,8 @@ function __nft_needs_table
     return 1
   end
   # if we just had a choice or family, we probably need a table
-  for word in $__nft_choices $__nft_families
-    if [ $cmd[-1] = $word ]
-      return 0
-    end
-  end
+  contains -- $cmd[-1] $__nft_choices $__nft_familes
+  and return 0
   return 1
 end
 
@@ -177,6 +170,8 @@ end
 
 function __nft_using_ct_original_reply
   set -l cmd (commandline -opc)
+  set -q cmd[-2]
+  or return 1
   if not [ $cmd[-2] = "ct" ]
     return 1
   end
