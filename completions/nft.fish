@@ -87,20 +87,52 @@ function __nft_needs_chain
   if not contains -- chain $cmd; and not contains -- rule $cmd
     return 1
   end
-  set -l min_len 4
-  if contains -- sudo $cmd
-    set min_len (math $min_len+1)
-  end
-  for word in $__nft_families
-    if contains -- $word $cmd
-      set min_len (math $min_len+1)
-    end
-  end
+  # what will be in the command line is unknown, but it must be at minimum:
+  # "nft <command> <chain/rule> <table>" which is 4 words long. This will
+  # determine whether it needs a chain
+  set -l min_len (__modify_min_length $cmd 4)
   if test (count $cmd) -eq $min_len
     return 0
   end
   return 1
 end
+
+# some completions will use the length of the command. This adjust that length for
+# optional arguments
+function __modify_min_length
+  set -l cmd $argv[1]
+  set -l min_len $argv[2]
+  # If it has sudo, it should be one longer.
+  if contains -- sudo $cmd
+    set min_len (math $min_len+1)
+  end
+  # If it has a family (optional argument) it will be one longer
+  for word in $__nft_families
+    if contains -- $word $cmd
+      set min_len (math $min_len+1)
+    end
+  end
+  return min_len
+end
+
+## check whether nft needs rule suggestions
+#function __nft_needs_rule_statement
+#  set -l cmd (commandline -opc)
+#  # need to be using add rule
+#  if not __nft_using_command add
+#    or not contains -- "rule" $cmd
+#    return 1
+#  end
+#  set -l min_len 5
+#  if contains -- sudo $cmd
+#  for word in $__nft_families
+#    if contains -- $word $cmd
+#      set min_len (math $min_len+1)
+#    end
+#  end
+
+
+
 
 # nft must take a subcommand or a switch, file completions are useless here
 complete -c nft -f
