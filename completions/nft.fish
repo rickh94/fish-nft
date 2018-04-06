@@ -123,7 +123,7 @@ end
 function __nft_needs_rule_match
   set -l cmd (commandline -opc)
   # need to be using add rule
-  if not __nft_using_command add
+  if not __nft_using_command "add" "describe"
     or not contains -- "rule" $cmd
     return 1
   end
@@ -199,17 +199,18 @@ complete -c nft -s f -l file -r -d "Read input from a file"
 complete -c nft -s i -l interactive -x -d "Read input from an interactive readline CLI"
 
 # Subcommands
-complete -c nft -n "__nft_needs_command" -a add     -d "Add a table, chain, rule, set, map, or object"
-complete -c nft -n "__nft_needs_command" -a list    -d "List a ruleset, table, chain, set, map, or object"
-complete -c nft -n "__nft_needs_command" -a flush   -d "Flush (delete everything from) a ruleset, table, chain, set, or map"
-complete -c nft -n "__nft_needs_command" -a export  -d "Print the ruleset in a machine readable format (json or xml)"
-complete -c nft -n "__nft_needs_command" -a delete  -d "Delete a table, chain, rule, set, element, map, or object."
-complete -c nft -n "__nft_needs_command" -a create  -d "Similar to add but returns an error for existing chain."
-complete -c nft -n "__nft_needs_command" -a rename  -d "Rename the specified chain"
-complete -c nft -n "__nft_needs_command" -a insert  -d "Similar to the add command, but the rule is prepended to the beginning of the chain or before the rule at the given position."
-complete -c nft -n "__nft_needs_command" -a replace -d "Similar to the add command, but replaces the specified rule."
-complete -c nft -n "__nft_needs_command" -a reset   -d "List-and-reset stateful object."
-complete -c nft -n "__nft_needs_command" -a chain   -d "Edit an existing chain."
+complete -c nft -n "__nft_needs_command" -a add      -d "Add a table, chain, rule, set, map, or object"
+complete -c nft -n "__nft_needs_command" -a list     -d "List a ruleset, table, chain, set, map, or object"
+complete -c nft -n "__nft_needs_command" -a flush    -d "Flush (delete everything from) a ruleset, table, chain, set, or map"
+complete -c nft -n "__nft_needs_command" -a export   -d "Print the ruleset in a machine readable format (json or xml)"
+complete -c nft -n "__nft_needs_command" -a delete   -d "Delete a table, chain, rule, set, element, map, or object."
+complete -c nft -n "__nft_needs_command" -a create   -d "Similar to add but returns an error for existing chain."
+complete -c nft -n "__nft_needs_command" -a rename   -d "Rename the specified chain"
+complete -c nft -n "__nft_needs_command" -a insert   -d "Similar to the add command, but the rule is prepended to the beginning of the chain or before the rule at the given position."
+complete -c nft -n "__nft_needs_command" -a replace  -d "Similar to the add command, but replaces the specified rule."
+complete -c nft -n "__nft_needs_command" -a reset    -d "List-and-reset stateful object."
+complete -c nft -n "__nft_needs_command" -a chain    -d "Edit an existing chain."
+complete -c nft -n "__nft_needs_command" -a describe -d "Show information about the type of an expression and its data type"
 
 # command groups(ish). table/chain/rule/etc
 complete -c nft -n "__nft_needs_choice add delete"     -a "table chain set rule map element"
