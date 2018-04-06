@@ -19,9 +19,7 @@ $ omf install https://github.com/rickh94/fish-nft
 
 ## Usage
 
-```fish
-$ nft
-```
+Just use the nft command line utility and enjoy the improved compleitions
 
 
 # License
