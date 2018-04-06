@@ -82,6 +82,7 @@ function __nft_needs_table
     set max_length (math $max_length+1)
   end
   if test (count $cmd) -gt $max_length
+    or __nft_using_command describe
     return 1
   end
   # if we just had a choice or family, we probably need a table
@@ -123,7 +124,7 @@ end
 function __nft_needs_rule_match
   set -l cmd (commandline -opc)
   # need to be using add rule
-  if not __nft_using_command "add" "describe"
+  if not __nft_using_command "add"
     or not contains -- "rule" $cmd
     return 1
   end
@@ -164,6 +165,8 @@ function __nft_using_rule_match
   set -l cmd (commandline -opc)
   contains -- $cmd[-1] $argv
   or return 1
+  __nft_using_command describe
+  and return 0
   if contains -- $argv $__nft_families
     if test (count $cmd) -lt 6
       return 1
@@ -179,6 +182,17 @@ function __nft_using_ct_original_reply
   end
   contains -- $cmd[-1] "original" "reply"
   or return 1
+  return 0
+end
+
+function __nft_describing_command
+  set -l cmd (commandline -opc)
+  for word in $cmd
+    contains -- $word $__nft_rule_matches
+    and return 1
+  end
+  not __nft_using_command describe
+  and return 1
   return 0
 end
 
@@ -219,6 +233,7 @@ complete -c nft -n "__nft_needs_choice flush"          -a "ruleset table chain s
 complete -c nft -n "__nft_needs_choice export"         -a "ruleset"
 complete -c nft -n "__nft_needs_choice create rename"  -a "chain"
 complete -c nft -n "__nft_needs_choice insert replace" -a "rule"
+complete -c nft -n "__nft_describing_command" -a "$__nft_rule_matches"
 
 # after command groups
 complete -c nft -n "__nft_needs_family"                                 -a "$__nft_families"                                     -d "family (optional)"
